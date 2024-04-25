@@ -28,7 +28,8 @@ class PurchaseController extends Controller
 
     public function create()
     {
-        $price = Price::where('status', true)->first();
+        $country = auth()->user()->country;
+        $price = Price::latest()->where('country', $country)->first();
         return view('purchase.create', compact('price'));
     }
 
@@ -324,6 +325,29 @@ class PurchaseController extends Controller
         return $response;
     }
 
+
+    public function client_history()
+    {
+
+
+
+
+           $users = auth()->user()->id;
+
+
+            $payments = Purchase::latest()
+            ->whereIn('user_id', $users)
+            ->where("status", 1)->get();
+
+            if(!$payments) {
+                return redirect()->back()->with('alert', ['type' => 'error', 'message' => "No payments found"]);
+            }
+
+            return view('payments.history', compact('payments'));
+
+
+
+    }
 
 
 

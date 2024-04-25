@@ -34,6 +34,7 @@ class User extends Authenticatable
         'email',
         'is_tenant',
         'is_admin',
+        'is_super_admin',
         'password',
     ];
 
@@ -97,6 +98,10 @@ class User extends Authenticatable
             $query->where('tenant_id', $this->id);
         })->get();
     }
+
+
+
+
 
     public function purchase() {
         return $this->hasMany(Purchase::class, 'user_id');

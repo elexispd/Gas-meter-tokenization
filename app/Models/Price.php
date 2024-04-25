@@ -12,6 +12,7 @@ class Price extends Model
     protected $fillable = [
         'quantity',
         'price',
+        'country',
         'status',
     ];
 }

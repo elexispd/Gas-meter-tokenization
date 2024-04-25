@@ -200,11 +200,73 @@
             </div>
             @endcan
 
-            @can("users",  auth()->user())
+            {{-- @can("users",  auth()->user())
                 <div class="text-center" style="display: flex; justify-content: center; align-items: center; height: 50vh;">
                     <img src="{{ asset('dist/img/logo_entak.jpg') }}" alt="entak logo" style="width: 200px;">
                 </div>
-            @endcan
+            @endcan --}}
+
+
+
+            <div class="row">
+                @if(auth()->user()->is_tenant)
+
+                    @foreach ($plants as $plant)
+                        <section class="col-lg-6 connectedSortable">
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>
+                                        <strong> <a href="{{ route('user.tenant.plant.users', $plant->id) }}"> {{ $plant->address }} {{ $plant->state }}, {{ $plant->country }} </a></strong>
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <a href="{{ route('user.tenant.plant.users', $plant->id) }}"> <img src="{{ asset('dist/img/plant.png') }}" alt="plant" srcset="" style="width: 100%;"> </a>
+                                </div>
+                            </div>
+
+
+                        </section>
+                    @endforeach
+
+                @endif
+
+            </div>
+
+
+            <div class="row">
+                @if(auth()->user()->meter_number != null)
+
+                    <section class="col-lg-6 connectedSortable">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <strong> <a href="{{ route('purchase.add') }}"> Pay For Gas </a></strong>
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <a href="{{ route('purchase.add') }}"> <img src="{{ asset('dist/img/meter.jpg') }}" alt="metre" srcset="" style="width: 100%;"> </a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="col-lg-6 connectedSortable">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    <strong> <a href=""> Purshase History </a></strong>
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <a href=""> <img src="{{ asset('dist/img/doc.jpg') }}" alt="doc" srcset="" style="width: 100%;"> </a>
+                            </div>
+                        </div>
+                    </section>
+
+
+                @endif
+
+            </div>
 
 
 

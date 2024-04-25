@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/', [ProfileController::class, 'admin_index'])->name('admin.index');
         Route::get('/{user}/edit', [ProfileController::class, 'tenant_edit'])->name('admin.edit');
-        Route::put('/{user}/edit', [ProfileController::class, 'update'])->name('admin.update');
+        // Route::put('/{user}/edit', [ProfileController::class, 'update'])->name('admin.update');
         Route::get('/admin/create', [ProfileController::class, 'admin_create'])->name('admin.create');
         Route::post('/admin/create', [ProfileController::class, 'admin_store'])->name('admin.store');
         Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('admin.show');
@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/{user}/edit', [ProfileController::class, 'update'])->name('user.update');
         Route::get('/create', [ProfileController::class, 'create'])->name('user.add');
         Route::post('/', [ProfileController::class, 'store'])->name('user.store');
+        Route::post('/payment-history', [PurchaseController::class, 'client_history'])->name('user.payment.history');
     });
 
     Route::prefix('user/tenant')->group(function () {
@@ -67,8 +68,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [ProfileController::class, 'tenant_store'])->name('user.tenant.store');
         Route::get('/{user}/plants', [PlantController::class, 'my_plants'])->name('user.tenant.plants');
         Route::get('/{user}/consumers', [PlantController::class, 'my_consumers'])->name('user.tenant.consumers');
+        Route::get('/plant-user/{id}', [PlantController::class, 'plantConsumers'])->name('user.tenant.plant.users');
         Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('tenant.show');
     });
+
+
 
 
 

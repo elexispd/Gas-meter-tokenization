@@ -89,6 +89,25 @@
                                     @enderror
                                 </div>
 
+                                @if ($user->is_admin && !$user->is_super_admin)
+                                    <div class="form-group ml-4">
+                                        <label for="is_super_admin">
+                                            <input type="checkbox" class="form-check-input" name="is_super_admin" value="1" id="is_super_admin">
+                                            Upgrade to Super Admin
+                                        </label>
+                                    </div>
+                                @elseif ($user->is_admin && $user->is_super_admin)
+                                <div class="form-group ml-4">
+                                    <label for="is_super_admin">
+                                        <input type="checkbox" checked class="form-check-input" name="is_super_admin" value="0" id="is_super_admin">
+                                        Downgrade to Admin
+                                    </label>
+                                </div>
+                                @else
+                                @endif
+
+
+
                             </div>
 
 

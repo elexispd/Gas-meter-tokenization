@@ -97,4 +97,11 @@ class PlantController extends Controller
         return view('profile/tenants.consumers.index', compact('user', 'consumers'));
     }
 
+    public function plantConsumers($id)
+    {
+        $plant = Plant::findOrFail($id);
+        $consumers = $plant->users()->get();
+        return view('plants.plant-users', compact('plant', 'consumers'));
+    }
+
 }

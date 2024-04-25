@@ -27,50 +27,73 @@
                 <div class="col-12">
                     <!-- Custom Content -->
                     <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">List of Pricing</h3>
-                        </div>
-                        <div class="card-body">
-                            <table id="example1" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>S/N</th>
-                                        <th>Quantity</th>
-                                        <th>Price</th>
-                                        <th>Status</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php $serialNumber = 1; @endphp
-                                    @foreach ($prices as $price)
+                        @if (auth()->user()->is_super_admin)
+                            <div class="card-header">
+                                <h3 class="card-title">List of Pricing</h3>
+                            </div>
+                            <div class="card-body">
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>S/N</th>
+                                                <th>Country</th>
+                                                <th>Price</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                    <tbody>
+                                        @foreach ($prices as $price)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $price->country }} </td>
+                                                <td>{{ $price->price}}  </td>
+                                                <td>
+                                                    @if ($price->status)
+                                                        <span class="badge bg-success">Active</span>
+                                                    @else
+                                                    <span class="badge bg-danger">Old</span>
+                                                    @endif
+                                                </td>
+                                                <td>{{  $price->created_at->diffForHumans() }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
                                         <tr>
-                                            <td>{{ $serialNumber++ }}</td>
-                                            <td>{{ $price->quantity }} </td>
-                                            <td>{{ $price->price}}  </td>
-                                            <td>
-                                                @if ($price->status)
-                                                    <span class="badge bg-success">Active</span>
-                                                @else
-                                                <span class="badge bg-danger">Old</span>
-                                                @endif
-                                            </td>
-                                            <td>{{  $price->created_at->diffForHumans() }}</td>
+                                            <th>S/N</th>
+                                            <th>Country</th>
+                                            <th>Price</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
                                         </tr>
-                                    @endforeach
+                                    </tfoot>
+                                </table>
 
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>S/N</th>
-                                        <th>Quantity</th>
-                                        <th>Price</th>
-                                        <th>Status</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
+
+                            </div>
+                         @else
+                         <div class="card-body">
+
+                            <div class="col-lg-12 text-center">
+                                 <img src="{{ asset('dist/img/plant.png') }}" alt="plant" srcset="" style="" >
+                                 <h5 class="mt-3">Dear Esteem Customer, Our current price for 1m<sup>3</sup> of LPG is
+                                    @if ($prices && $prices->exists())
+                                    <strong>
+                                        @if ($prices->country == "Nigeria")
+                                            NGN
+                                        @elseif ($prices->country == "Cameroon")
+                                            XAF
+                                        @else
+                                            GHN
+                                        @endif
+                                        {{ $prices->price }}</strong>
+                                    @endif
+
+                                </h5>
+                            </div>
+                         </div>
+                        @endif
                     </div>
                     <!-- /.Custom Content -->
                 </div>

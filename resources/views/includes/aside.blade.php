@@ -194,6 +194,16 @@
                 @endcan
 
                 @can('token', auth()->user())
+
+                <li class="nav-item">
+                    <a href="{{ route('price.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-gas-pump"></i>
+                        <p>
+                            Gas Price
+                        </p>
+                    </a>
+                </li>
+
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-coins"></i>
@@ -213,6 +223,7 @@
                     </ul>
                 </li>
                 @endcan
+
 
                 @can('admins', auth()->user())
                 <li class="nav-item">
@@ -235,6 +246,16 @@
                 </li>
                 @endcan
                 @if(auth()->user()->is_tenant)
+
+                <li class="nav-item">
+                    <a href="{{ route('price.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-gas-pump"></i>
+                        <p>
+                            Gas Price
+                        </p>
+                    </a>
+                </li>
+
                 <li class="nav-item">
                     <a href="#" class="nav-link {{ strpos(Route::currentRouteName(), 'payment.') === 0  ? 'active' : '' }} ">
                         <i class="nav-icon fas fa-credit-card"></i>
@@ -283,6 +304,16 @@
                         <i class="nav-icon fas fa-key"></i>
                         <p>
                             Change Password
+                        </p>
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('user.show', auth()->user()->id) }}" class="nav-link">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>
+                            Profile
                         </p>
                     </a>
 

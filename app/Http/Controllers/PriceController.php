@@ -18,7 +18,15 @@ class PriceController extends Controller
 
     public function index()
     {
-        $prices = Price::latest()->get();
+        if(auth()->user()->is_super_admin || auth()->user()->is_admin) {
+            $prices = Price::latest()->get();
+        }
+        else{
+            $country = auth()->user()->country;
+            $prices = Price::latest()->where('country', $country)->first();
+        }
+
+
         return view('prices.index', compact('prices') );
     }
 
@@ -32,18 +40,17 @@ class PriceController extends Controller
     {
         $validate = $request->validate([
             'price' => ['required'],
+            'country' => ['required'],
             'quantity' => ['required'],
         ]);
+
 
         // Start a transaction
         DB::beginTransaction();
 
         try {
-            // Retrieve the last price and update its status
-            $lastPrice = Price::latest()->first();
-            if ($lastPrice) {
-                $lastPrice->update(['status' => false]);
-            }
+            // Retrieve the last active price for the same country and update its status
+            Price::where('country', $validate['country'])->where('status', true)->update(['status' => false]);
 
             // Create the new price
             $newPrice = $price->create($validate);
@@ -60,8 +67,8 @@ class PriceController extends Controller
             $this->activityLogger->logActivity(auth()->id(), 'Price Failed', "Price for amount " . $request->input('price') . " failed to create");
             return redirect()->back()->with('alert', ['type' => 'success', 'message' => 'Something went wrong.']);
         }
-
     }
+
 
     /**
      * Display the specified resource.

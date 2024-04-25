@@ -37,7 +37,7 @@
                             <div class="card-body">
 
                                 <div class="form-group">
-                                    <label for="state">Quantity (m<sup>2</sup>)</label>
+                                    <label for="state">Quantity (m<sup>3</sup>)</label>
                                     <input type="number" class="form-control" name="quantity" id="quantity" autocomplete="false">
 
                                     @error('quantity')
@@ -120,10 +120,22 @@
             var quantity = $(this).val();
             var gasPrice = {{ $price->price }}; // Assuming $price is passed from the controller
 
+            var c = '{{ $price->country }}';
+
+
+
+            if( c == "Nigeria") {
+                var country = "NGN";
+            } else if( c == "Cameroon" ) {
+                var country = "XAF";
+            } else {
+                var country = "GHC";
+            }
+
             if (quantity && !isNaN(quantity)) {
                 var currentPrice = quantity * gasPrice;
                 var formattedPrice = formatWithCommas(currentPrice.toFixed(2));
-                $('#calculated_price').text('$' + formattedPrice);
+                $('#calculated_price').text(country + ' ' + formattedPrice);
                 $('#amount').val(currentPrice);
                 $('#price_display').show();
             } else {

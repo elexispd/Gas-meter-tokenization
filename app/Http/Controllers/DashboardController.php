@@ -15,7 +15,15 @@ class DashboardController extends Controller
         $user_count = User::whereNotNull('meter_number')->count();
         $sales_count = Purchase::whereNot('status', true)->count();
         $plant_count = Plant::count();
-        return view('dashboard', compact('tenant_count', 'user_count','sales_count', 'plant_count'));
+
+        $tenant = auth()->user()->is_tenant;
+        if($tenant == 1) {
+            $plants = plant::where('tenant_id', auth()->user()->id)->get();
+        }else{
+            $plants = [];
+        }
+
+        return view('dashboard', compact('tenant_count', 'user_count','sales_count', 'plant_count', 'plants'));
     }
 
 

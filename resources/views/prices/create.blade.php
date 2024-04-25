@@ -49,9 +49,17 @@
                                 </div> --}}
 
                                 <div class="form-group">
-                                    <label for="state">Quantity (m<sup>2</sup>)</label>
-                                    <input type="number" class="form-control" name="quantity" id="">
-                                    @error('quantity')
+                                    <label for="state">1 (m<sup>3</sup>)</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="state">Country</label>
+                                    <select name="country" id="country" class="form-control">
+                                        <option value="">Select Country</option>
+                                        <option value="Nigeria" {{ old('country') == 'Nigeria' ?'selected' : '' }}>Nigeria</option>
+                                        <option value="Cameroon" {{ old('country') == 'Cameroon' ?'selected' : '' }}>Cameroon</option>
+                                        <option value="Ghana" {{ old('country') == 'Ghana' ?'selected' : '' }}>Ghana</option>
+                                    </select>
+                                    @error('country')
                                     <span class="text-danger"> {{ $message }}</span>
                                     @enderror
                                 </div>
@@ -61,6 +69,7 @@
                                     @error('price')
                                     <span class="text-danger"> {{ $message }}</span>
                                     @enderror
+                                    <input type="hidden" name="quantity" value="1">
                                 </div>
 
 
@@ -93,7 +102,7 @@
 
       $('#quickForm').validate({
         rules: {
-          quantity: {
+          country: {
             required: true,
           },
           price: {
@@ -106,8 +115,8 @@
           price: {
             required: "Please enter a price",
           },
-          quantity: {
-            required: "Please enter quantity",
+          country: {
+            required: "Please select country",
           },
 
         },

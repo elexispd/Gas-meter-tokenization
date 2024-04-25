@@ -240,12 +240,16 @@ class ProfileController extends Controller
 
         ]);
 
+        $is_super_admin = $request->has('is_super_admin');
+
+
         $user->update([
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
             'email' => $validatedData['email'],
             'country' => $validatedData['country'],
             'state' => $validatedData['state'],
+            'is_super_admin' => $is_super_admin,
         ]);
 
         $this->activityLogger->logActivity(auth()->id(), 'User Updated', 'Tenant with name ' .  $request->input('first_name'). " ". $request->input('last_name') . " is updated" );

@@ -30,7 +30,36 @@
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3>{{ $sales_count }}</h3>
-                            <p>Sales</p>
+                            <p>Total Sales</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="#" class="small-box-footer"></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <img src="{{ asset('dist/img/nigeria.png') }}" style="width: 50px;" data-value="Nigeria" class="active-flag flag" alt="">
+                            <img src="{{ asset('dist/img/ghana.png') }}" style="width: 50px;" data-value="Ghana" class="flag" alt="">
+                            <img src="{{ asset('dist/img/cameroon.png') }}" style="width: 50px;" data-value="Cameroon" class="flag" alt="">
+
+                            <h3 id="revenue">0.00</h3>
+
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="#" class="small-box-footer"></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-secondary">
+                        <div class="inner">
+                            <h3>{{ $volume_today_count }}</h3>
+                            <p>Volume Sold</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-bag"></i>
@@ -220,8 +249,8 @@
                                         <strong> <a href="{{ route('user.tenant.plant.users', $plant->id) }}"> {{ $plant->address }} {{ $plant->state }}, {{ $plant->country }} </a></strong>
                                     </h4>
                                 </div>
-                                <div class="card-body">
-                                    <a href="{{ route('user.tenant.plant.users', $plant->id) }}"> <img src="{{ asset('dist/img/plant.png') }}" alt="plant" srcset="" style="width: 100%;"> </a>
+                                <div class="card-body text-center">
+                                    <a href="{{ route('user.tenant.plant.users', $plant->id) }}"> <img src="{{ asset('dist/img/plant.png') }}" alt="plant" srcset="" style="width: 50%;"> </a>
                                 </div>
                             </div>
 
@@ -244,8 +273,8 @@
                                     <strong> <a href="{{ route('purchase.add') }}"> Pay For Gas </a></strong>
                                 </h4>
                             </div>
-                            <div class="card-body">
-                                <a href="{{ route('purchase.add') }}"> <img src="{{ asset('dist/img/meter.jpg') }}" alt="metre" srcset="" style="width: 100%;"> </a>
+                            <div class="card-body text-center">
+                                <a href="{{ route('purchase.add') }}"> <img src="{{ asset('dist/img/meter.jpg') }}" alt="metre" srcset="" style="width: 50%;"> </a>
                             </div>
                         </div>
                     </section>
@@ -254,11 +283,11 @@
                         <div class="card">
                             <div class="card-header">
                                 <h4>
-                                    <strong> <a href=""> Purshase History </a></strong>
+                                    <strong> <a href="{{ route('user.payment.history') }}"> Purshase History </a></strong>
                                 </h4>
                             </div>
-                            <div class="card-body">
-                                <a href=""> <img src="{{ asset('dist/img/doc.jpg') }}" alt="doc" srcset="" style="width: 100%;"> </a>
+                            <div class="card-body text-center">
+                                <a href="{{ route('user.payment.history') }}"> <img src="{{ asset('dist/img/doc.jpg') }}" alt="doc" srcset="" style="width: 50%;"> </a>
                             </div>
                         </div>
                     </section>
@@ -274,6 +303,66 @@
 
         </div>
     </section>
+
+    <script>
+        // let country = 'Nigeria';
+        // $.ajax({
+        //             url: "{{ route('revenue.show') }}",
+        //             method: 'GET',
+        //             data: { country: country },
+        //             success: function(data) {
+        //                 // Update the revenue display
+        //                 alert(data.sales_today_count);
+        //                 $('#revenue').text(data.sales_today_count);
+        //             },
+        //             error: function(xhr, status, error) {
+        //                 alert('Error fetching revenue:', error);
+        //             }
+        //         });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+
+            let selectedCountry = 'Nigeria';
+
+            // Function to update revenue based on selected country
+            function updateRevenue(country) {
+
+                $.ajax({
+                    url: "{{ route('revenue.show') }}",
+                    method: 'GET',
+                    data: { country: country },
+                    success: function(data) {
+                        // Update the revenue display
+                        $('#revenue').text(data.sales_today_count);
+                    },
+                    error: function(xhr, status, error) {
+                        // console.error('Error fetching revenue:', error);
+                    }
+                });
+            }
+
+
+            $('.flag').click(function() {
+                // Remove the active class from all flags
+                $('.flag').removeClass('active-flag');
+
+                // Add the active class to the clicked flag
+                $(this).addClass('active-flag');
+
+                // Get the data-value of the clicked flag
+                selectedCountry = $(this).data('value');
+
+                // Update revenue for the selected country
+                updateRevenue(selectedCountry);
+            });
+
+            // Initially update revenue for default country (Nigeria)
+            updateRevenue(selectedCountry);
+        });
+
+    </script>
 
 </div>
 

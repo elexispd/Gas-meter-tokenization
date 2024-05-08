@@ -36,6 +36,7 @@ class User extends Authenticatable
         'is_admin',
         'is_super_admin',
         'password',
+        'phone_number',
     ];
 
     /**

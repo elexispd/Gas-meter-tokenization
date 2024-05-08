@@ -18,6 +18,7 @@ use Illuminate\Validation\Rules;
 use App\Jobs\SendRegisterEmail;
 use App\Mail\RegisterMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 
 class ProfileController extends Controller
 {
@@ -29,6 +30,12 @@ class ProfileController extends Controller
         public ActivityLogger $activityLogger
     ) {}
 
+    private function validate_phone($phone): string {
+        $phone = preg_replace('/\D/', '', $phone);
+        $phone = preg_replace('/^(\+?0*)/', '', $phone);
+        $phone = preg_replace('/^(\d{3})0?/', '$1', $phone);
+        return $phone;
+    }
 
     public function create() {
         $plants = Plant::whereNull('deleted_at')->get();
@@ -42,14 +49,15 @@ class ProfileController extends Controller
 
     public function store(Request $request) {
         try {
-            $this->validate($request, [
+            $validated_data = $this->validate($request, [
                 'first_name' =>'required',
                 'last_name' =>'required',
                 'email' =>'required|email|unique:users,email',
+                'phone_number' =>'required|string|unique:users,phone_number',
                 'meter_number' =>'required|unique:users,meter_number',
                 'state' =>'required',
                 'country' =>'required',
-                'plant' =>'required'
+                'plant' =>'required',
             ]);
         } catch (ValidationException $e) {
             // Customizing the error message for the unique email rule
@@ -62,10 +70,13 @@ class ProfileController extends Controller
         DB::beginTransaction();
 
         try {
+            $phone = $this->validate_phone($validated_data["phone_number"]);
+
             $user = User::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
+                'phone_number' => $phone,
                 'meter_number' => $request->meter_number,
                 'address' => $request->address,
                 'state' => $request->state,
@@ -115,35 +126,42 @@ class ProfileController extends Controller
         return view('profile.show', compact('user', 'plant_count', 'endUsersCount'));
     }
 
+
+
     /**
      * Update the user's profile information.
      */
-    public function update(Request $request, User $user): RedirectResponse
+    public function update(Request $request, User $user)
     {
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone_number' => 'required|string|unique:users,phone_number,' . $user->id,
             'country' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'meter_number' => 'required|string|max:255',
             'plant' => 'required|exists:plants,id'
         ]);
 
+        $phone = $this->validate_phone($validatedData["phone_number"]);
+
         $user->update([
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
             'email' => $validatedData['email'],
+            'phone_number' => $phone,
             'country' => $validatedData['country'],
             'state' => $validatedData['state'],
             'meter_number' => $validatedData['meter_number']
         ]);
 
+
         // Sync the user's associated plant
         $user->plants()->sync($validatedData['plant']);
         $this->activityLogger->logActivity(auth()->id(), 'User Updated', 'User With Meter-Number ' .  $request->input('meter_number') . " is updated" );
         return redirect()->back()->with('alert', ['type' => 'success', 'message' => 'user updated successfully.']);
-    }
+     }
 
     /**
      * Delete the user's account.
@@ -169,15 +187,16 @@ class ProfileController extends Controller
 
     public function tenant_store(Request $request) {
         try {
-            $this->validate($request, [
+            $validated_data = $this->validate($request, [
                 'first_name' =>'required',
                 'last_name' =>'required',
                 'email' =>'required|email|unique:users,email',
+                'phone_number' =>'required|string|unique:users,phone_number',
                 'state' =>'required',
                 'country' =>'required',
             ]);
         } catch (ValidationException $e) {
-            // Customizing the error message for the unique email rule
+            // Customizing the error messagefor the unique email rule
             $errors = $e->validator->errors()->getMessages();
             $errors['email'] = ['The email address is already in use.'];
 
@@ -188,10 +207,12 @@ class ProfileController extends Controller
 
         try {
             $password = 'tenant12345';
+            $phone = $this->validate_phone($validated_data["phone_number"]);
             $user = User::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
+                'phone_number' => $phone,
                 'address' => $request->address,
                 'state' => $request->state,
                 'is_tenant' => true,
@@ -235,6 +256,7 @@ class ProfileController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone_number' => 'required|string|unique:users,phone_number,' . $user->id,
             'country' => 'required|string|max:255',
             'state' => 'required|string|max:255',
 
@@ -242,11 +264,18 @@ class ProfileController extends Controller
 
         $is_super_admin = $request->has('is_super_admin');
 
+        $phone = $validatedData["phone_number"];
+            // Remove non-digit characters and the leading '+'
+            $phone = preg_replace('/\D|^(\+?)/', '', $phone);
+
+            // Remove '0' after the first 3 digits
+            $phone = preg_replace('/^(\d{3})0/', '$1', $phone);
 
         $user->update([
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
             'email' => $validatedData['email'],
+            'phone_number' => $phone,
             'country' => $validatedData['country'],
             'state' => $validatedData['state'],
             'is_super_admin' => $is_super_admin,
@@ -280,10 +309,11 @@ class ProfileController extends Controller
 
     public function admin_store(Request $request) {
         try {
-            $this->validate($request, [
+            $validated_data = $this->validate($request, [
                 'first_name' =>'required',
                 'last_name' =>'required',
                 'email' =>'required|email|unique:users,email',
+                'phone_number' =>'required|string|unique:users,phone_number',
                 'state' =>'required',
                 'country' =>'required',
             ]);
@@ -297,10 +327,12 @@ class ProfileController extends Controller
 
         try {
             $password = 'admin12345';
+            $phone = $this->validate_phone($validated_data["phone_number"]);
             $user = User::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
+                'phone_number' => $phone,
                 'address' => $request->address,
                 'state' => $request->state,
                 'is_admin' => true,
@@ -339,15 +371,17 @@ class ProfileController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone_number' => 'required|string|unique:users,phone_number,' . $user->id,
             'country' => 'required|string|max:255',
             'state' => 'required|string|max:255',
 
         ]);
-
+        $phone = $this->validate_phone($validatedData["phone_number"]);
         $user->update([
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
             'email' => $validatedData['email'],
+            'phone_number' => $validatedData['phone_number'],
             'country' => $validatedData['country'],
             'state' => $validatedData['state'],
         ]);
@@ -383,6 +417,8 @@ class ProfileController extends Controller
         $this->activityLogger->logActivity(auth()->id(), 'User Password Change', 'User  ' .  $user->first_name . " ". $user->last_name . " changed password" );
         return redirect()->back()->with('alert',['type' => 'success','message' => 'password changed successfully']);
     }
+
+
 
 
 

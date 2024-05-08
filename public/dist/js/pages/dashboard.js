@@ -89,7 +89,7 @@ $(function(){
         url: '/getChartData', // Assuming this route fetches the required data
         method: 'GET',
         success: function(response) {
-            console.log('Response:', response); // Debug: Check the response from the server
+            // console.log('Response:', response); // Debug: Check the response from the server
 
             // Process the data from the server
             var weeklyData = {};
@@ -110,7 +110,7 @@ $(function(){
                 }
             });
 
-            console.log('Weekly Data:', weeklyData); // Debug: Check the processed weekly data
+            // console.log('Weekly Data:', weeklyData); // Debug: Check the processed weekly data
 
             // Convert weeklyData object to arrays for labels and quantities
             var labels = [];
@@ -120,8 +120,8 @@ $(function(){
                 quantities.push(weeklyData[i] || 0);
             }
 
-            console.log('Labels:', labels); // Debug: Check the labels array
-            console.log('Quantities:', quantities); // Debug: Check the quantities array
+            // console.log('Labels:', labels); // Debug: Check the labels array
+            // console.log('Quantities:', quantities); // Debug: Check the quantities array
 
             // Replace the static data with the fetched data
             var salesChartData = {
@@ -139,7 +139,7 @@ $(function(){
                 }]
             };
 
-            console.log('Sales Chart Data:', salesChartData); // Debug: Check the salesChartData
+            // console.log('Sales Chart Data:', salesChartData); // Debug: Check the salesChartData
 
             // Create the sales chart with the updated data
             var salesChartCanvas = document.getElementById('revenue-chart-canvas').getContext('2d');
@@ -149,7 +149,7 @@ $(function(){
                 options: salesChartOptions
             });
 
-            console.log('Sales Chart:', salesChart); // Debug: Check the salesChart object
+            // console.log('Sales Chart:', salesChart); // Debug: Check the salesChart object
         },
         error: function(xhr, status, error) {
             console.error(error);

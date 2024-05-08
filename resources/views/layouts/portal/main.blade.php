@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('dist/cutealert/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('dist/css/style.css') }}">
 
     @include('includes.scripts')
 </head>

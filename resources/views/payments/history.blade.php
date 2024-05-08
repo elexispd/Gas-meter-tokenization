@@ -68,12 +68,15 @@
                                             <td>{{ $payment->created_at }}</td>
                                         </tr>
                                     @elseif(isset($payments)) <!-- Check if $payments variable is set -->
+                                        @php
+                                            $countryTotals = []; // Initialize an array to store totals for each country
+                                        @endphp
                                         @foreach ($payments as $payment)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td> <!-- Use $loop->iteration to get the iteration count -->
                                                 <td>{{ $payment->user->first_name }} {{ $payment->user->last_name }}</td>
                                                 <td>{{ $payment->quantity }}</td>
-                                                <td>{{ number_format($payment->response['data']['amount'], 2) }}</td>
+                                                <td>{{ number_format($payment->amount , 2)}}</td>
                                                 @can('admins', auth()->user())
 
                                                     <td>{{ $payment->response["data"]["currency"] }}</td>
@@ -91,24 +94,35 @@
                                                 </td>
                                                 <td>{{ $payment->created_at }}</td>
                                             </tr>
+                                            @php
+                                                // Calculate totals for each country
+                                                $country = $payment->user->plants->first()->country;
+                                                if (!isset($countryTotals[$country])) {
+                                                    $countryTotals[$country] = ['quantity' => 0, 'total' => 0];
+                                                }
+                                                $countryTotals[$country]['quantity'] += $payment->quantity;
+                                                $countryTotals[$country]['total'] += $payment->amount;
+                                            @endphp
                                         @endforeach
                                     @endif
 
 
                                 </tbody>
                                 <tfoot>
-                                    <tr>
-                                        <th>S/N</th>
-                                        <th>Consumer</th>
-                                        <th>Quantity</th>
-                                        <th>Amount</th>
-                                        @can('admins', auth()->user())
-                                        <th>Currency</th>
-                                        <th>Channel</th>
-                                        @endcan
-                                        <th>Status</th>
-                                        <th>Date</th>
-                                    </tr>
+                                    @foreach ($countryTotals as $country => $totals)
+                                        <tr>
+                                            <th>Total </th>
+                                            <th>{{ $country }}</th>
+                                            <th>{{ $totals['quantity'] }}</th>
+                                            <th></th>
+                                            @can('admins', auth()->user())
+                                                <th></th>
+                                                <th></th>
+                                            @endcan
+                                            <th></th>
+                                            <th>{{ number_format($totals['total'], 2) }}</th>
+                                        </tr>
+                                    @endforeach
                                 </tfoot>
                             </table>
                         </div>

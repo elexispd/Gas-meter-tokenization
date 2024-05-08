@@ -44,6 +44,9 @@
                                     <b>Email</b> <a class="float-right">{{ $user->email }}</a>
                                 </li>
                                 <li class="list-group-item">
+                                    <b>Phone Number</b> <a class="float-right">{{ $user->phone_number }}</a>
+                                </li>
+                                <li class="list-group-item">
                                     <b>Address</b> <a class="float-right">{{ $user->address }}</a>
                                 </li>
                                 <li class="list-group-item">

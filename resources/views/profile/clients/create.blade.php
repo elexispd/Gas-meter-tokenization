@@ -70,6 +70,13 @@
                                     @enderror
                                 </div>
                                 <div class="form-group">
+                                    <label for="exampleInputEmail1">Phone Number</label>
+                                    <input type="number" name="phone_number" value="{{ old('phone_number') }}" class="form-control" id="exampleInputEmail1" placeholder="234803453556">
+                                    @error('phone_number')
+                                        <span class="text-danger"> {{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
                                     <label for="country">Country</label>
                                     <select class="form-control" name="country" id="country">
                                         <option value="">Select Country</option>

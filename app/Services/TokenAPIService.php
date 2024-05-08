@@ -14,6 +14,20 @@ class TokenApiService
         return $response->json();
     }
 
+    public function send_sms($phone, $message) {
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ])->post('https://www.bulksmsnigeria.com/api/v2/sms', [
+            'body' => $message,
+            'from' => 'Entak Ltd.',
+            'to' => $phone,
+            'api_token' => env("SMS_API_KEY"),
+            'gateway' => 'direct-refund',
+            'callback_url' => 'https://www.airtimenigeria.com/api/reports/sms'
+        ]);
+    }
+
 
 
 

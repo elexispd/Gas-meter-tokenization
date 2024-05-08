@@ -56,7 +56,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/{user}/edit', [ProfileController::class, 'update'])->name('user.update');
         Route::get('/create', [ProfileController::class, 'create'])->name('user.add');
         Route::post('/', [ProfileController::class, 'store'])->name('user.store');
-        Route::post('/payment-history', [PurchaseController::class, 'client_history'])->name('user.payment.history');
+        Route::get('/payment-history', [PurchaseController::class, 'client_history'])->name('user.payment.history');
     });
 
     Route::prefix('user/tenant')->group(function () {
@@ -141,5 +141,7 @@ Route::middleware('auth')->group(function () {
 
 
 });
+
+Route::get('/get-revenue', [DashboardController::class, 'get_revenue'])->name('revenue.show');
 
 require __DIR__.'/auth.php';

@@ -78,17 +78,25 @@
                             <div class="col-lg-12 text-center">
                                  <img src="{{ asset('dist/img/plant.png') }}" alt="plant" srcset="" style="" >
                                  <h5 class="mt-3">Dear Esteem Customer, Our current price for 1m<sup>3</sup> of LPG is
-                                    @if ($prices && $prices->exists())
-                                    <strong>
-                                        @if ($prices->country == "Nigeria")
-                                            NGN
-                                        @elseif ($prices->country == "Cameroon")
-                                            XAF
-                                        @else
-                                            GHN
-                                        @endif
-                                        {{ $prices->price }}</strong>
+                                    @if ($prices && count($prices) > 0)
+                                        @foreach ($prices as $price)
+                                            <div class="price-block">
+                                                <strong>
+                                                    @if ($price->country == "Nigeria")
+                                                        NGN
+                                                    @elseif ($price->country == "Cameroon")
+                                                        XAF
+                                                    @else
+                                                        GHN
+                                                    @endif
+                                                    {{ $price->price }}
+                                                </strong>
+                                            </div>
+                                            <br> <!-- Optional: Add a line break between each price -->
+                                        @endforeach
                                     @endif
+
+
 
                                 </h5>
                             </div>

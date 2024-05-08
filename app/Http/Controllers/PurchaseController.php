@@ -68,7 +68,7 @@ class PurchaseController extends Controller
         }
     }
 
-    function send_token(Request $request) {
+    public function send_token(Request $request) {
         $user = auth()->user();
         $order_id = $request->get('ref_id');
         $amount = $request->get('quantity');
@@ -85,10 +85,14 @@ class PurchaseController extends Controller
                 $details = Purchase::where('order_id', $order_id)->first();
                 try {
                     Mail::to($user->email)->send(new TokenMail($user, $details, $token));
+                    $message = "Your meter token has been successfully generated. Your Token is: " . $token;
+                    $this->token->send_sms($user->phone_number, $message);
+
                     return response()->json([
                         'success' => true,
                         'message' => 'Mail sent successfully.',
                     ]);
+
                 } catch (\Exception $e) {
                     // Handle mail sending error
                     return response()->json([
@@ -277,6 +281,9 @@ class PurchaseController extends Controller
 
             $payments = Purchase::latest()
             ->whereIn('user_id', $users)
+            ->whereHas('user.plants', function ($query) {
+                $query->where('status', true);
+            })
             ->whereBetween('created_at', [$from, $to])
             ->where("status", 1)->get();
 
@@ -297,6 +304,8 @@ class PurchaseController extends Controller
             return redirect()->back()->with('alert', ['type' => 'error', 'message' => "No payments found"]);
         }
     }
+
+
 
 
 
@@ -328,22 +337,17 @@ class PurchaseController extends Controller
 
     public function client_history()
     {
+        $user = auth()->user();
 
+        $payments = Purchase::latest()
+        ->whereIn('user_id', $user)
+        ->where("status", 1)->get();
 
+        if(!$payments) {
+            return redirect()->back()->with('alert', ['type' => 'error', 'message' => "No payments found"]);
+        }
 
-
-           $users = auth()->user()->id;
-
-
-            $payments = Purchase::latest()
-            ->whereIn('user_id', $users)
-            ->where("status", 1)->get();
-
-            if(!$payments) {
-                return redirect()->back()->with('alert', ['type' => 'error', 'message' => "No payments found"]);
-            }
-
-            return view('payments.history', compact('payments'));
+        return view('payments.client-history', compact('payments'));
 
 
 

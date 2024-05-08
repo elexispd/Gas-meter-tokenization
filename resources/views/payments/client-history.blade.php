@@ -38,61 +38,26 @@
                                         <th>Consumer</th>
                                         <th>Quantity</th>
                                         <th>Amount</th>
-                                        @can('admins', auth()->user())
-                                        <th>Currency</th>
-                                        <th>Channel</th>
-                                        @endcan
                                         <th>Status</th>
                                         <th>Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if(isset($payment)) <!-- Check if $payment variable is set -->
+
+                                    @foreach ($payments as $payment)
                                         <tr>
-                                            <td>1</td> <!-- Assuming it's just one payment -->
+                                            <td>{{ $loop->iteration }}</td> <!-- Use $loop->iteration to get the iteration count -->
                                             <td>{{ $payment->user->first_name }} {{ $payment->user->last_name }}</td>
                                             <td>{{ $payment->quantity }}</td>
-                                            <td>{{ number_format($payment->response['data']['amount'], 2) }}</td>
-                                            <td>{{ $payment->response["data"]["currency"] }}</td>
-                                            <td class="text-capitalize">{{ $payment->response["data"]["channel"] }}</td>
-                                            <td>
-                                                @if ($payment->status == 0)
-                                                    <span class="badge bg-warning text-capitalize">{{ $payment->response["data"]["status"] }}</span>
-                                                @elseif ($payment->status == 1)
-                                                    <span class="badge bg-success text-capitalize">{{ $payment->response["data"]["status"] }}</span>
+                                            <td>{{ number_format($payment->amount, 2) }}</td>
 
-                                                @else
-                                                    <span class="badge bg-warning">{{ $payment->response["data"]["status"] }}</span>
-                                                @endif
+                                            <td>
+                                                <span class="badge bg-success"> Success </span>
                                             </td>
                                             <td>{{ $payment->created_at }}</td>
                                         </tr>
-                                    @elseif(isset($payments)) <!-- Check if $payments variable is set -->
-                                        @foreach ($payments as $payment)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td> <!-- Use $loop->iteration to get the iteration count -->
-                                                <td>{{ $payment->user->first_name }} {{ $payment->user->last_name }}</td>
-                                                <td>{{ $payment->quantity }}</td>
-                                                <td>{{ number_format($payment->response['data']['amount'], 2) }}</td>
-                                                @can('admins', auth()->user())
+                                    @endforeach
 
-                                                    <td>{{ $payment->response["data"]["currency"] }}</td>
-                                                    <td>{{ $payment->response["data"]["channel"] }}</td>
-                                                @endcan
-
-                                                <td>
-                                                    @if ($payment->status == 0)
-                                                        <span class="badge bg-warning text-capitalize">{{ $payment->response["data"]["status"] }}</span>
-                                                    @elseif ($payment->status == 1)
-                                                        <span class="badge bg-success"> {{ $payment->response["data"]["status"] }}</span>
-                                                    @else
-                                                        <span class="badge bg-info">{{ $payment->response["data"]["status"] }}</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{ $payment->created_at }}</td>
-                                            </tr>
-                                        @endforeach
-                                    @endif
 
 
                                 </tbody>

@@ -1,0 +1,4 @@
+.active-flag {
+    border: 2px solid rgb(36, 36, 138);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}

@@ -22,8 +22,28 @@ class PriceController extends Controller
             $prices = Price::latest()->get();
         }
         else{
-            $country = auth()->user()->country;
-            $prices = Price::latest()->where('country', $country)->first();
+            // $country = auth()->user()->country;
+            // $prices = Price::latest()->where('country', $country)->first();
+            $user = auth()->user();
+
+            // Get the unique countries where the user has plants
+            $countries = $user->plantss->pluck('country')->unique();
+
+
+
+            // Initialize an empty array to store the latest prices for each country
+            $prices = [];
+
+            // Loop through each country
+            foreach ($countries as $country) {
+                // Get the latest price for the current country
+                $latestPrice = Price::latest()->where('country', $country)->first();
+
+                // If a price is found for the current country, add it to the prices array
+                if ($latestPrice) {
+                    $prices[] = $latestPrice;
+                }
+            }
         }
 
 

@@ -54,7 +54,7 @@
             <p><strong>Price:</strong> {{ $price }}</p>
             <p><strong>Quantity:</strong> {{ $quantity }} </p>
         </div>
-        <p>Thank you for your purchase. If you have any questions, feel free to contact us at <a href="mailto:info@entak.com">info@entak.com</a>.</p>
+        <p>Thank you for your purchase. If you have any questions, feel free to contact us at <a href="mailto:info@entakgroup.com">info@entakgroup.com</a>.</p>
         <p>Best regards,<br> <a href="http://entakenergy.com.ng">Entak Energy LTD.</a> </p>
     </div>
 </body>

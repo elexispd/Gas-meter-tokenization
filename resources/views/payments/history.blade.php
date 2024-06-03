@@ -47,7 +47,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
+                                    @php
+                                        $countryTotals = []; // Initialize an array to store totals for each country
+                                    @endphp
                                     @if(isset($payment)) <!-- Check if $payment variable is set -->
+
                                         <tr>
                                             <td>1</td> <!-- Assuming it's just one payment -->
                                             <td>{{ $payment->user->first_name }} {{ $payment->user->last_name }}</td>
@@ -68,9 +73,7 @@
                                             <td>{{ $payment->created_at }}</td>
                                         </tr>
                                     @elseif(isset($payments)) <!-- Check if $payments variable is set -->
-                                        @php
-                                            $countryTotals = []; // Initialize an array to store totals for each country
-                                        @endphp
+
                                         @foreach ($payments as $payment)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td> <!-- Use $loop->iteration to get the iteration count -->
@@ -85,6 +88,7 @@
 
                                                 <td>
                                                     @if ($payment->status == 0)
+                                                        {{-- <span class="badge bg-warning text-capitalize">{{ $payment->response["data"]["status"] }}</span> --}}
                                                         <span class="badge bg-warning text-capitalize">{{ $payment->response["data"]["status"] }}</span>
                                                     @elseif ($payment->status == 1)
                                                         <span class="badge bg-success"> {{ $payment->response["data"]["status"] }}</span>

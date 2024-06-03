@@ -14,6 +14,8 @@ class Purchase extends Model
         'order_id',
         'quantity',
         'amount',
+        'channnel',
+        'currency',
     ];
 
     public function user() {

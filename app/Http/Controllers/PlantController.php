@@ -23,6 +23,10 @@ class PlantController extends Controller
         $plants= Plant::whereNull('deleted_at')->get();
         return view('plants.index', compact('plants'));
     }
+    public function meters(Plant $plant) {
+        $users = $plant->users;
+        return view('plants.users', compact('users'));
+    }
 
     public function edit(Plant $plant) {
         $tenants = User::where('is_tenant', 1)->whereNull('deleted_at')->get();

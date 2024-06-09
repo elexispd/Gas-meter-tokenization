@@ -34,3 +34,4 @@ $.widget.bridge('uibutton', $.ui.button)
 <script src="{{ asset('dist/js/demo.js') }}"></script>
 <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>
 <script src="{{ asset('dist/cutealert/cute-alert.js') }}"></script>
+

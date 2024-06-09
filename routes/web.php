@@ -7,6 +7,8 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TokenMail;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +25,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/token', [PurchaseController::class, 'purchaseToken']);
 
-
+Route::get('/send_mail', function(){
+    Mail::to("promisedeco24@gmail.com")->send(new TokenMail());
+});
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
@@ -82,6 +86,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [PlantController::class, 'index'])->name('plant.index');
         Route::get('/create', [PlantController::class, 'create'])->name('plant.add');
         Route::get('/{plant}/edit', [PlantController::class, 'edit'])->name('plant.edit');
+        Route::get('/{plant}/meters', [PlantController::class, 'meters'])->name('plant.meters');
         Route::put('/{plant}', [PlantController::class, 'update'])->name('plant.update');
         Route::post('/', [PlantController::class, 'store'])->name('plant.store');
         Route::post('/destroy', [PlantController::class, 'destroy'])->name('plant.destroy');

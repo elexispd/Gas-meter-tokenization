@@ -39,14 +39,14 @@ class Plant extends Model
 
 
     public function my_consumers_for_tenant(User $tenant)
-{
-    return $this->belongsToMany(User::class, 'plant_user', 'plant_id', 'user_id')
-                ->wherePivot('status', true)
-                ->whereHas('tenant', function ($query) use ($tenant) {
-                    $query->where('id', $tenant->id);
-                })
-                ->select('id', 'first_name', 'last_name', 'country', 'state', 'address');
-}
+    {
+        return $this->belongsToMany(User::class, 'plant_user', 'plant_id', 'user_id')
+                    ->wherePivot('status', true)
+                    ->whereHas('tenant', function ($query) use ($tenant) {
+                        $query->where('id', $tenant->id);
+                    })
+                    ->select('id', 'first_name', 'last_name', 'country', 'state', 'address');
+    }
 
 
 

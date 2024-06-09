@@ -17,10 +17,10 @@ class TokenMail extends Mailable
     private $user;
     private $details;
     private $token;
-    public function __construct(User $user, $details, $token)
-    {
-        $this->user = $user; $this->details = $details; $this->token = $token;
-    }
+    // public function __construct(User $user, $details, $token)
+    // {
+    //     $this->user = $user; $this->details = $details; $this->token = $token;
+    // }
 
 
     /**
@@ -42,14 +42,24 @@ class TokenMail extends Mailable
      */
     public function content()
     {
-        return new Content(
+        // return new Content(
+        //     view: 'emails.token',
+        //     with: [
+        //         'name' => $this->user->first_name . " " . $this->user->last_name,
+        //         'email' => $this->user->email,
+        //         'token' => $this->token,
+        //         'price' => $this->details->amount,
+        //         'quantity' => $this->details->quantity
+        //     ]
+        // );
+         return new Content(
             view: 'emails.token',
             with: [
-                'name' => $this->user->first_name . " " . $this->user->last_name,
-                'email' => $this->user->email,
-                'token' => $this->token,
-                'price' => $this->details->amount,
-                'quantity' => $this->details->quantity
+                'name' => "Promise Elexis",
+                'email' => "promisedeco24@gmailcom",
+                'token' => 342342342,
+                'price' => 1200,
+                'quantity' => 1
             ]
         );
     }

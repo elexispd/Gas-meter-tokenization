@@ -55,7 +55,8 @@
                                             <td>{{ $plant->address }}</td>
                                             @can('show', auth()->user())
                                             <td>
-                                                <a href="{{ route('plant.edit', [$plant->id]) }}" class="text-primary"><i class="fa fa-edit"></i></a>
+                                                <a href="{{ route('plant.edit', [$plant->id]) }}" class="text-primary"  ><i class="fa fa-edit"></i></a>
+                                                <a href="{{ route('plant.meters', [$plant->id]) }}" class="text-primary"><i class="fa fa-eye"></i></a>
                                                 <span class="text-danger delete-btn"  data-value="{{ $plant->id }}"><i class="fa fa-trash"></i></span>
                                             </td>
                                             @endcan

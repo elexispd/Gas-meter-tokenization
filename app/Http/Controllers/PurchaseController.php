@@ -187,6 +187,7 @@ class PurchaseController extends Controller
             $response = $this->paymentService->verifyPayment($order_id);
             $payment->response = $response; // Attach payment response
 
+
             return view('payments.history', compact('payment'));
         }
         // Check if the request is a POST request with 'from', 'to', and 'status' parameters
@@ -199,20 +200,20 @@ class PurchaseController extends Controller
                 return redirect()->back()->with('alert', ['type' => 'error', 'message' => "Invalid date range"]);
             }
 
-            // if($status == "all") {
-            //     $payments = Purchase::latest()->whereBetween('created_at', [$from, $to])->get();
-            // } else{
-            //     // Perform the search based on the provided range and status
-            //     $payments = Purchase::latest()->whereBetween('created_at', [$from, $to])
-            //                     ->where('status', $status)
-            //                     ->get();
-            // }
+            if($status == "all") {
+                $payments = Purchase::latest()->whereBetween('created_at', [$from, $to])->get();
+            } else{
+                // Perform the search based on the provided range and status
+                $payments = Purchase::latest()->whereBetween('created_at', [$from, $to])
+                                ->where('status', $status)
+                                ->get();
+            }
 
-            $payments = Purchase::latest()->whereBetween('created_at', [$from, $to])
-            ->when($status !== 'all', function ($query) use ($status) {
-                return $query->where('status', $status);
-            })
-            ->get();
+            // $payments = Purchase::latest()->whereBetween('created_at', [$from, $to])
+            // ->when($status !== 'all', function ($query) use ($status) {
+            //     return $query->where('status', $status);
+            // })
+            // ->get();
 
             if(!$payments) {
                 return redirect()->back()->with('alert', ['type' => 'error', 'message' => "No payments found"]);
@@ -223,13 +224,14 @@ class PurchaseController extends Controller
             //     $response = $this->paymentService->verifyPayment($payment->order_id);
             //     $payment->response = $response; // Attach payment response
             // }
-            foreach ($payments as $payment) {
-                $cacheKey = 'payment_response_' . $payment->order_id;
-                $response = Cache::remember($cacheKey, now()->addHour(), function () use ($payment) {
-                    return $this->paymentService->verifyPayment($payment->order_id);
-                });
-                $payment->response = $response; // Attach payment response
-            }
+            // foreach ($payments as $payment) {
+            //     $cacheKey = 'payment_response_' . $payment->order_id;
+            //     $response = Cache::remember($cacheKey, now()->addHour(), function () use ($payment) {
+            //         return $this->paymentService->verifyPayment($payment->order_id);
+            //     });
+            //     $payment->response = $response; // Attach payment response
+            // }
+
             return view('payments.history', compact('payments'));
         }
         elseif ($request->isMethod('post') && $request->has('meter_number')) {
@@ -242,17 +244,29 @@ class PurchaseController extends Controller
                 return redirect()->back()->with('alert', ['type' => 'error', 'message' => "User not found"]);
             }
             $payments = Purchase::latest()->where('user_id', $user->id)->get();
-            // Attach payment response to each payment
-            foreach ($payments as $payment) {
-                $response = $this->paymentService->verifyPayment($payment->order_id);
-                $payment->response = $response; // Attach payment response
-            }
             return view('payments.history', compact('payments'));
         }
         // If none of the conditions are met, redirect to the search page
         else {
             return redirect()->back()->with('alert', ['type' => 'error', 'message' => "No payments found"]);
         }
+    }
+
+    public function get_order_details(Request $request)
+    {
+        $orderId = $request->input('order_id');
+
+        if (!$orderId) {
+            return response()->json(['error' => 'Order ID is required'], 400);
+        }
+
+        $orderDetails = $this->paymentService->getOrderDetails($orderId);
+
+        if (!$orderDetails) {
+            return response()->json(['error' => 'Order not found or Paystack API error'], 404);
+        }
+
+        return response()->json($orderDetails);
     }
 
     public function tenant_search()

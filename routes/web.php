@@ -115,6 +115,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/tenant/result', [PurchaseController::class, 'redirectToTenantPaySearch'])->name('payment.t.redirect');
         Route::get('/result', [PurchaseController::class, 'redirectToSearch'])->name('payment.redirect');
         Route::post('/result', [PurchaseController::class, 'search_result'])->name('payment.result');
+        Route::get('/get-order-details', [PurchaseController::class, 'get_order_details'])->name('payment.get_order_details');
     });
 
     Route::prefix('audit')->group(function () {

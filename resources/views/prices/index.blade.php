@@ -12,7 +12,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item active">Pricing</li>
                     </ol>
                 </div>
@@ -78,9 +78,11 @@
                             <div class="col-lg-12 text-center">
                                  <img src="{{ asset('dist/img/plant.png') }}" alt="plant" srcset="" style="" >
                                  <h5 class="mt-3">Dear Esteem Customer, Our current price for 1m<sup>3</sup> of LPG is
+
                                     @if ($prices && count($prices) > 0)
                                         @foreach ($prices as $price)
                                             <div class="price-block">
+
                                                 <strong>
                                                     @if ($price->country == "Nigeria")
                                                         NGN

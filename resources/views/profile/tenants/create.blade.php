@@ -11,7 +11,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item active">Registration</li>
                     </ol>
                 </div>
@@ -58,6 +58,14 @@
                                     <label for="exampleInputEmail1">Email address</label>
                                     <input type="email" name="email" value="{{ old('email') }}" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
                                     @error('email')
+                                        <span class="text-danger"> {{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Phone Number</label>
+                                    <input type="text" name="phone_number" value="{{ old('phone_number') }}" class="form-control"  placeholder="234xxxxxxxx">
+                                    @error('phone_number')
                                         <span class="text-danger"> {{ $message }}</span>
                                     @enderror
                                 </div>

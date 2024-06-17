@@ -56,7 +56,7 @@
         <div>
             To login click <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
         </div>
-        <p>Thank you for your purchase. If you have any questions, feel free to contact us at <a href="mailto:info@entakgroup.com">info@entakgroup.com</a>.</p>
+        <p>If you have any questions, feel free to contact us at <a href="mailto:info@entakgroup.com">info@entakgroup.com</a>.</p>
         <p>Best regards,<br> <a href="http://entakenergy.com.ng"> Entak Energy & LPG Services Ltd.</a> </p>
     </div>
 </body>

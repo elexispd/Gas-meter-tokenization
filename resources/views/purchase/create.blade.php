@@ -11,7 +11,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item active">Buy Gas</li>
                     </ol>
                 </div>
@@ -37,7 +37,8 @@
                             <div class="card-body">
 
                                 <div class="form-group">
-                                    <label for="state">Quantity (m<sup>3</sup>)</label>
+                                    <label for="state">Quantity (m<sup>3</sup>)
+                                    <div> <small><strong> N/B:</strong></small> <small>1 cubic meter (1 m³) of LPG vapor is equivalent to 2.5 kilograms (2.5 kg) of liquid LPG.</small></div> </label>
                                     <input type="number" class="form-control" name="quantity" id="quantity" autocomplete="false">
 
                                     @error('quantity')

@@ -186,6 +186,7 @@ class ProfileController extends Controller
     }
 
     public function tenant_store(Request $request) {
+
         try {
             $validated_data = $this->validate($request, [
                 'first_name' =>'required',
@@ -263,6 +264,7 @@ class ProfileController extends Controller
         ]);
 
         $is_super_admin = $request->has('is_super_admin');
+
 
         $phone = $validatedData["phone_number"];
             // Remove non-digit characters and the leading '+'
@@ -345,6 +347,9 @@ class ProfileController extends Controller
                 throw new \Exception('Failed to create admin.');
             }
 
+
+            Mail::to($request->email)->send(new RegisterMail($request->first_name, $request->email, $password));
+
             $this->activityLogger->logActivity(auth()->id(), 'Admin 2 Created', 'Admin With email ' .  $request->input('email') . " is created" );
             return redirect()->back()->with('alert', ['type' => 'success', 'message' => 'Administrator 2 was created successfully.']);
         } catch (\Exception $e) {
@@ -385,6 +390,7 @@ class ProfileController extends Controller
             'country' => $validatedData['country'],
             'state' => $validatedData['state'],
         ]);
+
 
         $this->activityLogger->logActivity(auth()->id(), 'User Updated', 'Tenant with name ' .  $request->input('first_name'). " ". $request->input('last_name') . " is updated" );
         return redirect()->back()->with('alert', ['type' => 'success', 'message' => 'user updated successfully.']);

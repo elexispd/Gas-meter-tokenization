@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Price;
+use App\Models\Plant;
 use Illuminate\Http\Request;
 use App\Services\ActivityLogger;
 use Illuminate\Support\Facades\DB;
@@ -18,18 +19,30 @@ class PriceController extends Controller
 
     public function index()
     {
+
         if(auth()->user()->is_super_admin || auth()->user()->is_admin) {
-            $prices = Price::latest()->get();
+            $prices = [];
+            $countries = Plant::distinct()->pluck('country');
+            foreach ($countries as $country) {
+                // Get the latest price for the current country
+                $latestPrice = Price::latest()->where('country', $country)->first();
+
+                // If a price is found for the current country, add it to the prices array
+                if ($latestPrice) {
+                    $prices[] = $latestPrice;
+                }
+
+
+            }
+
         }
-        else{
+        elseif(auth()->user()->is_tenant) {
             // $country = auth()->user()->country;
             // $prices = Price::latest()->where('country', $country)->first();
             $user = auth()->user();
 
             // Get the unique countries where the user has plants
             $countries = $user->plantss->pluck('country')->unique();
-
-
 
             // Initialize an empty array to store the latest prices for each country
             $prices = [];
@@ -44,6 +57,9 @@ class PriceController extends Controller
                     $prices[] = $latestPrice;
                 }
             }
+        } else {
+            $country = auth()->user()->country;
+            $prices[] = Price::latest()->where('country', $country)->first();
         }
 
 

@@ -411,18 +411,36 @@ class ProfileController extends Controller
     public function change_password() {
         return view('profile.change-password');
     }
-    public function change_password_store(Request $request) {
 
+    public function change_password_store(Request $request) {
+        // Validate the request data, including checking current_password
         $request->validate([
+            'current_password' => 'required',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+
         /** @var \App\Models\User $user */
         $user = auth()->user();
+
+        // Check if the current_password matches the user's current password
+        if (!Hash::check($request->current_password, $user->password)) {
+            return redirect()->back()->with('alert',['type' => 'error','message' => 'The current password is incorrect.'])->withInput();
+        }
+
+        // If current_password matches, update the user's password
         $user->password = Hash::make($request->password);
         $user->save();
-        $this->activityLogger->logActivity(auth()->id(), 'User Password Change', 'User  ' .  $user->first_name . " ". $user->last_name . " changed password" );
-        return redirect()->back()->with('alert',['type' => 'success','message' => 'password changed successfully']);
+
+        // Log the password change activity
+        $this->activityLogger->logActivity(auth()->id(), 'User Password Change', 'User ' .  $user->first_name . " " . $user->last_name . " changed password");
+
+        // Redirect back with success message
+        return redirect()->back()->with('alert', [
+            'type' => 'success',
+            'message' => 'Password changed successfully'
+        ]);
     }
+
 
 
 

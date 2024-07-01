@@ -6,9 +6,13 @@ use App\Http\Controllers\PriceController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ComplaintController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TokenMail;
+use App\Models\Complaint;
+
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,7 +78,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('tenant.show');
     });
 
-
+    Route::prefix('user/complaint')->group(function () {
+        Route::get('/', [ComplaintController::class, 'index'])->name('complaint.admin.index')->middleware('can:admins,App\Models\User');
+        Route::get('/create', [ComplaintController::class, 'create'])->name('complaint.admin.create');
+        Route::post('/create', [ComplaintController::class, 'store'])->name('complaint.store');
+        Route::get('/{complaint}', [ComplaintController::class, 'show'])->name('complaint.show');
+    });
 
 
 

@@ -39,6 +39,10 @@
                                     <span class="text-danger"> {{ $message }}</span>
                                 @enderror
                                 <div class="form-group">
+                                    <label for="password">Current Password</label>
+                                    <input type="text" name="current_password" class="form-control" id="current_password" placeholder="">
+                                </div>
+                                <div class="form-group">
                                     <label for="password">New Password</label>
                                     <input type="text" name="password" class="form-control" id="password" placeholder="">
                                 </div>
@@ -79,6 +83,9 @@
           password_confirmation: {
             required: true,
           },
+          current_password: {
+            required: true,
+          },
 
         },
         messages: {
@@ -88,6 +95,9 @@
           password_confirmation: {
             required: "This Field is required",
           },
+          current_password: {
+            required: "This Field is required",
+          }
         },
         errorElement: 'span',
         errorPlacement: function (error, element) {

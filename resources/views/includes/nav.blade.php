@@ -11,9 +11,11 @@
 
     <ul class="navbar-nav ml-auto">
         <li class="nav-item" style="vertical-align: auto;">
-            <img src="{{ asset('dist/img/avatar.jpg') }}" class="img-circle elevation-2" alt="User Image" width="20">
+            <a href="{{ route('user.show', auth()->user()) }}" style="color: black;">
+                <img src="{{ asset('dist/img/avatar.jpg') }}" class="img-circle elevation-2" alt="User Image" width="20">
 
-            {{ auth()->user()->first_name }} {{ auth()->user()->last_name }}
+                {{ auth()->user()->first_name }} {{ auth()->user()->last_name }}
+            </a>
         </li>
 
         {{-- <li class="nav-item dropdown">

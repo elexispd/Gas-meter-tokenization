@@ -30,65 +30,46 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     .login-right {
-        background: url({{ asset('dist/img/login_bg.jpg') }}) no-repeat center center;
-        background-size: cover;
         flex: 1;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f4f6f9;
     }
-    .login-box {
+    .carousel-inner {
+        height: 100%;
+    }
+    .carousel-item {
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+    }
+    .carousel-item.active {
+        opacity: 1;
+    }
+    .carousel-item img {
+        object-fit: cover;
+        height: 100%;
         width: 100%;
-        max-width: 400px;
     }
-    .card {
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    .carousel-control-prev,
+    .carousel-control-next {
+        display: none; /* Hide carousel controls */
     }
-    .card-body {
-        padding: 40px;
+    .carousel-indicators {
+        bottom: 20px;
     }
-    .login-card-body {
-        background-color: #ffffff;
-        border-top: 5px solid #28a745;
+    .carousel-indicators li {
+        background-color: black;
     }
-    .login-card-body h2 {
-        margin-bottom: 20px;
-        font-size: 24px;
-        font-weight: 700;
-        color: #333;
-    }
-    .input-group-text {
-        background-color: #f1f1f1;
-        border-left: 0;
-    }
-    .form-control {
-        border-right: 0;
-        border-left: 1px solid #ced4da;
-        box-shadow: none;
-    }
-    .btn-success {
+    .carousel-indicators .active {
         background-color: #28a745;
-        border: none;
     }
-    .btn-success:hover {
-        background-color: #218838;
-    }
-    .alert {
-        border-radius: 5px;
-        margin-bottom: 20px;
-    }
-    .icheck-primary input[type="checkbox"] {
-        margin-top: 0;
-    }
-    .icheck-primary label {
-        margin-left: 5px;
-    }
-    @media (max-width: 767.98px) {
+
+    @media (max-width: 768px) {
         .login-container {
             flex-direction: column;
-        }
-        .login-left {
-            flex: none;
-            width: 100%;
-            box-shadow: none;
         }
         .login-right {
             display: none;
@@ -154,10 +135,34 @@
                 </div>
             </div>
         </div>
-        <div class="login-right"></div>
+        <div class="login-right">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img class="d-block w-100" src="{{ asset('dist/img/slide1.png') }}" alt="First slide">
+                    </div>
+                    <div class="carousel-item">
+                        <img class="d-block w-100" src="{{ asset('dist/img/slide2.png') }}" alt="Second slide">
+                    </div>
+                    <div class="carousel-item">
+                        <img class="d-block w-100" src="{{ asset('dist/img/slide3.png') }}" alt="Third slide">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize Carousel
+            $('#carouselExampleIndicators').carousel({
+                interval: 3000, // Change slide every 3 seconds
+                pause: 'hover', // Pause on hover
+                wrap: true // Wrap slides
+            });
+        });
+    </script>
 </body>
 </html>

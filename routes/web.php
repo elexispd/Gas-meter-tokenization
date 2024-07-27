@@ -7,6 +7,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ComplaintController;
+use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TokenMail;
@@ -53,6 +54,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/create', [ProfileController::class, 'admin_create'])->name('admin.create');
         Route::post('/admin/create', [ProfileController::class, 'admin_store'])->name('admin.store');
         Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('admin.show');
+
+        Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+        Route::get('/news/create', [NewsController::class, 'create'])->name('news.create');
+        Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
+        Route::put('/news/{news}', [NewsController::class, 'update'])->name('news.update');
+        Route::get('/news/{news}/edit', [NewsController::class, 'edit'])->name('news.edit');
+        Route::post('/news', [NewsController::class, 'store'])->name('news.store');
+        Route::delete('/news/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
+
     });
 
     Route::prefix('user')->group(function () {

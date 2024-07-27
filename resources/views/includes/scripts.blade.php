@@ -34,4 +34,7 @@ $.widget.bridge('uibutton', $.ui.button)
 <script src="{{ asset('dist/js/demo.js') }}"></script>
 <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>
 <script src="{{ asset('dist/cutealert/cute-alert.js') }}"></script>
+{{-- <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script> --}}
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+
 

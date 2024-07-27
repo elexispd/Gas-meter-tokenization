@@ -353,7 +353,32 @@
                                 <p>Generate Log</p>
                             </a>
                         </li>
+                    </ul>
 
+                </li>
+                <li class="nav-item">
+
+                    <a href="#" class="nav-link {{ strpos(Route::currentRouteName(), 'audit.') === 0  ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>
+                            News
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('news.create') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Upload News</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('news.index') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>View News</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @endcan

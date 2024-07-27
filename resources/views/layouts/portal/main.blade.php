@@ -20,8 +20,39 @@
     <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 
+
     <link rel="stylesheet" href="{{ asset('dist/cutealert/style.css') }}">
     <link rel="stylesheet" href="{{ asset('dist/css/style.css') }}">
+
+    <style>
+        .content-wrapper {
+            padding: 20px;
+        }
+
+        .news-content img {
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            max-width: 500px; /* Standard blog image width */
+            height: 400px; /* Standard blog image height */
+            object-fit: cover; /* Crop the image to fit the box */
+        }
+
+        .news-content {
+            margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            .thumbnail img {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+    </style>
 
     @include('includes.scripts')
 </head>

@@ -30,9 +30,11 @@ use App\Models\User;
 
 Route::get('/token', [PurchaseController::class, 'purchaseToken']);
 
-Route::get('/send_mail', function(){
-    Mail::to("promisedeco24@gmail.com")->send(new TokenMail());
-});
+// Route::get('/test', [NewsController::class, 'test']);
+
+// Route::get('/send_mail', function(){
+//     Mail::to("promisedeco24@gmail.com")->send(new TokenMail());
+// });
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');

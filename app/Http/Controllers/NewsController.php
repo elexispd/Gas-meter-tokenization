@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 
 use App\Models\News;
 use App\Models\User;
+use App\Jobs\SendNewsletter;
 use App\Services\ActivityLogger;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class NewsController extends Controller
 {
@@ -22,6 +24,12 @@ class NewsController extends Controller
     public function index() {
         $news = News::paginate(2);
         return view('news.index', compact('news'));
+    }
+
+    public function test() {
+        $subscribers = DB::table('subscribers')->get();
+        // Dispatch the job to send the newsletter
+        SendNewsletter::dispatch($subscribers, "Testing Newsletter");
     }
 
     public function store(Request $request)
@@ -44,6 +52,12 @@ class NewsController extends Controller
         if ($is_saved) {
             // Log activity
             $this->activityLogger->logActivity(auth()->id(), 'News Created', 'This user created an article with title ' . $validated['title']);
+            // Get all subscribers
+            $subscribers = DB::table('subscribers')->get();
+
+            // Dispatch the job to send the newsletter
+            SendNewsletter::dispatch($subscribers, $validated['title'], $is_saved->id);
+
             return redirect()->back()->with('alert', ['type' => 'success', 'message' => 'News uploaded successfully.']);
         } else {
             $this->activityLogger->logActivity(auth()->id(), 'News Upload Failed', 'Attempt to upload news failed ' . $validated['title']);

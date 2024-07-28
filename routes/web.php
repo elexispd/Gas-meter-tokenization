@@ -8,6 +8,7 @@ use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\CareerController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TokenMail;
@@ -64,6 +65,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/news/{news}/edit', [NewsController::class, 'edit'])->name('news.edit');
         Route::post('/news', [NewsController::class, 'store'])->name('news.store');
         Route::delete('/news/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
+
+        Route::get('/career', [CareerController::class, 'index'])->name('career.index');
+        Route::get('/career/create', [CareerController::class, 'create'])->name('career.create');
+        Route::get('/career/{career}', [CareerController::class, 'show'])->name('career.show');
+        Route::put('/career/{career}', [CareerController::class, 'update'])->name('career.update');
+        Route::get('/career/{career}/edit', [CareerController::class, 'edit'])->name('career.edit');
+        Route::post('/career', [CareerController::class, 'store'])->name('career.store');
+        Route::delete('/career/{id}', [CareerController::class, 'destroy'])->name('career.destroy');
 
     });
 

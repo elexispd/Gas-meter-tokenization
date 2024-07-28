@@ -29,7 +29,7 @@ class NewsController extends Controller
     public function test() {
         $subscribers = DB::table('subscribers')->get();
         // Dispatch the job to send the newsletter
-        SendNewsletter::dispatch($subscribers, "Testing Newsletter");
+        SendNewsletter::dispatch($subscribers, "Testing Newsletter", 5);
     }
 
     public function store(Request $request)

@@ -52,7 +52,7 @@
         <div class="info">
             <p>A new article was added to our newsletter just for you...</p>
             <p>Title:  {{ $content }}</p>
-            <a href="{{ url('show?newsquery=' . $newsId) }}" class="btn btn-success">Read more</a>
+            <a href="https://entakgroup.com/show?newsquery={{ $newsId }} " class="btn btn-success">Read more</a>
         </div>
 
         <p>If you have any questions, feel free to contact us at <a href="mailto:info@entakgroup.com">info@entakgroup.com</a>.</p>

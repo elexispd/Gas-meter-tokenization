@@ -337,29 +337,11 @@
 
 
                 @can('show', auth()->user())
+
                 <li class="nav-item">
 
                     <a href="#" class="nav-link {{ strpos(Route::currentRouteName(), 'audit.') === 0  ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-book"></i>
-                        <p>
-                            Audit Log
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('audit.search') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Generate Log</p>
-                            </a>
-                        </li>
-                    </ul>
-
-                </li>
-                <li class="nav-item">
-
-                    <a href="#" class="nav-link {{ strpos(Route::currentRouteName(), 'audit.') === 0  ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-book"></i>
+                        <i class="nav-icon fas fa-briefcase"></i>
                         <p>
                             Career
                             <i class="fas fa-angle-left right"></i>
@@ -405,6 +387,26 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+
+                <li class="nav-item">
+
+                    <a href="#" class="nav-link {{ strpos(Route::currentRouteName(), 'audit.') === 0  ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-history"></i>
+                        <p>
+                            Audit Log
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('audit.search') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Generate Log</p>
+                            </a>
+                        </li>
+                    </ul>
+
                 </li>
                 @endcan
 

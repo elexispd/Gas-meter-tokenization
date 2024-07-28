@@ -47,6 +47,7 @@ class PurchaseController extends Controller
         $purchase->quantity = $request->quantity;
         $purchase->order_id = $order_id;
         $purchase->user_id = $user->id;
+        $purchase->country = $user->country;
         $purchase->status = 0;
 
 
@@ -191,29 +192,32 @@ class PurchaseController extends Controller
             return view('payments.history', compact('payment'));
         }
         // Check if the request is a POST request with 'from', 'to', and 'status' parameters
-        elseif ($request->isMethod('post') && $request->has(['from', 'to'])) {
+        elseif ($request->isMethod('post') && $request->has(['from', 'to']) && $request->has(['country'])) {
             $from = $request->input('from') . ' 00:00:00';
             $to = $request->input('to') . ' 23:59:59';
             $status = $request->input('status');
+            $country = $request->input('country');
 
             if(empty($from) || empty($to) ) {
                 return redirect()->back()->with('alert', ['type' => 'error', 'message' => "Invalid date range"]);
             }
+            $payment_list = Purchase::latest()->whereBetween('created_at', [$from, $to])->get();
 
             if($status == "all") {
-                $payments = Purchase::latest()->whereBetween('created_at', [$from, $to])->get();
+                if($country == 'all' || empty($country)) {
+                    $payments = $payment_list;
+                } else {
+                    $payments = $payment_list->where('country', $country);
+                }
             } else{
                 // Perform the search based on the provided range and status
-                $payments = Purchase::latest()->whereBetween('created_at', [$from, $to])
-                                ->where('status', $status)
-                                ->get();
+                if($country == 'all' || empty($country)) {
+                    $payments = $payment_list->where('status', $status);
+                } else {
+                    $payments = $payment_list->where('country', $country, 'status', $status);
+                }
             }
 
-            // $payments = Purchase::latest()->whereBetween('created_at', [$from, $to])
-            // ->when($status !== 'all', function ($query) use ($status) {
-            //     return $query->where('status', $status);
-            // })
-            // ->get();
 
             if(!$payments) {
                 return redirect()->back()->with('alert', ['type' => 'error', 'message' => "No payments found"]);

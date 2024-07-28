@@ -84,6 +84,19 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>County</label>
+                                        <select name="country" id="status" class="form-control" name="status">
+                                            <option value=""></option>
+                                            <option value="all">General</option>
+                                            <option value="Nigeria">Nigeria</option>
+                                            <option value="Ghana">Ghana</option>
+                                            <option value="Cameroon">Cameroon</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-6 mx-auto">

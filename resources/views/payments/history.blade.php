@@ -36,6 +36,8 @@
                                     <tr>
                                         <th>S/N</th>
                                         <th>Consumer</th>
+                                        <th>Meter Number</th>
+                                        <th>Address</th>
                                         <th>Order ID</th>
                                         <th>Quantity</th>
                                         <th>Amount</th>
@@ -62,6 +64,8 @@
                                                 @endif
 
                                             </td>
+                                            <td>  {{ optional($payment->user)->meter_number }} </td>
+                                            <td>  {{ optional($payment->user)->address }} </td>
                                             <td>{{ $payment->order_id }}</td>
                                             <td>{{ $payment->quantity }}</td>
                                             <td>{{ number_format($payment->amount , 2)}}</td>
@@ -96,6 +100,8 @@
                                                     @endif
 
                                                 </td>
+                                                <td>  {{ optional($payment->user)->meter_number }} </td>
+                                                <td>  {{ optional($payment->user)->address }} </td>
                                                 <td>{{ $payment->order_id }}</td>
                                                 <td>{{ $payment->quantity }}</td>
                                                 <td>{{ number_format($payment->amount , 2)}}</td>
@@ -144,6 +150,8 @@
                                     @foreach ($countryTotals as $country => $totals)
                                         <tr>
                                             <th>Total </th>
+                                            <th> </th>
+                                            <th> </th>
                                             <th>{{ $country }}</th>
                                             <th></th>
                                             <th>{{ $totals['quantity'] }}</th>

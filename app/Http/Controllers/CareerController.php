@@ -40,7 +40,7 @@ class CareerController extends Controller
             // Get all subscribers
 
 
-            return redirect()->back()->with('alert', ['type' => 'success', 'message' => 'career published successfully.']);
+            return redirect()->back()->with('alert', ['type' => 'success', 'message' => 'Vacancy published successfully.']);
         } else {
             $this->activityLogger->logActivity(auth()->id(), 'career Upload Failed', 'Attempt to publish career failed ' . $validated['title']);
             return redirect()->back()->with('alert', ['type' => 'error', 'message' => 'Failed to publish career.']);

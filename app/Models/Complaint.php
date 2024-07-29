@@ -12,6 +12,8 @@ class Complaint extends Model
         'subject',
         'description',
         'user_id',
+        'resolve_approach',
+        'resolved_by',
         'status',
     ];
 

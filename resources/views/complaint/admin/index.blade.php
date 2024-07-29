@@ -38,6 +38,7 @@
                                         <th>User</th>
                                         <th>Subject</th>
                                         <th>Date</th>
+                                        <th>Status</th>
                                         @can('admins', auth()->user())
                                         <th>Action</th>
                                         @endcan
@@ -58,6 +59,13 @@
                                                 </td>
                                                 <td>{{ $complaint->subject }}</td>
                                                 <td>{{ $complaint->created_at }}</td>
+                                                <td>
+                                                    @if ($complaint->status)
+                                                        <span class="badge badge-success">Resolved</span>
+                                                    @else
+                                                        <span class="badge badge-warning">Pending</span>
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <i class="fa fa-eye text-primary" data-toggle="modal" data-id="{{ $complaint->id }}" data-target="#viewModal" style="cursor: pointer;"></i>
                                                 </td>
@@ -120,40 +128,113 @@
         });
     </script>
 
-    <script>
-        $(document).ready(function(){
-            $('#viewModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget); // Button that triggered the modal
-                var complaint_Id = button.data('id'); // Extract info from data-* attributes
-                var modal = $(this);
-                modal.find('.modal-title').text('Complaint Detail');
-                modal.find('#modalContent').html('<div class="text-center">Loading...</div>');
+<script>
+    $(document).ready(function(){
+        $('#viewModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var complaint_Id = button.data('id'); // Extract info from data-* attributes
+            var modal = $(this);
+            modal.find('.modal-title').text('Complaint Detail');
+            modal.find('#modalContent').html('<div class="text-center">Loading...</div>');
 
-                $.ajax({
-                    url: '{{ route('complaint.show', ':id') }}'.replace(':id', complaint_Id),
-                    method: 'GET',
-                    data: { complaint_id: complaint_Id },
-                    success: function(response) {
-                        var complaint = response;
-                        var body = `
-                            <div style="font-size: 4em; padding: 20px; background-color: #f8f9fa; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); font-size: 16px;">
-                                <p><strong>User:</strong>  ${complaint.user.first_name} ${complaint.user.last_name}</p>
-                                <p><strong>Subject:</strong>  ${complaint.subject}</p>
-                                <p><strong>Description:</strong>  ${complaint.description}</p>
-                                <p><strong>Date Created:</strong> ${complaint.created_at}</p>
-                            </div>
+            $.ajax({
+                url: '{{ route('complaint.show', ':id') }}'.replace(':id', complaint_Id),
+                method: 'GET',
+                data: { complaint_id: complaint_Id },
+                success: function(response) {
+                    var complaint = response;
+                    var statusBadge = complaint.status
+                        ? '<span class="badge badge-success">Resolved</span>'
+                        : '<span class="badge badge-info" id="resolve-drop" data-id="' + complaint_Id + '">Resolve Issue</span>';
+                    var resolvedDetails = '';
+                    if (complaint.status) {
+                        resolvedDetails = `
+                            <p><strong>Date Resolved:</strong> ${complaint.updated_at}</p>
+                            <p><strong>Resolved By:</strong> ${complaint.resolved_by}</p>
+                            <p><strong>Response:</strong> ${complaint.resolve_approach}</p>
                         `;
-
-                        modal.find('#modalContent').html(body);
-                    },
-                    error: function(xhr, status, error) {
-                        modal.find('#modalContent').html('Failed to fetch compaint. Status: ' + status + ', Error: ' + error);
                     }
-                });
 
+                    var body = `
+                        <div style="font-size: 1em; padding: 20px; background-color: #f8f9fa; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                            <p><strong>User:</strong> ${complaint.user.first_name} ${complaint.user.last_name}</p>
+                            <p><strong>Subject:</strong> ${complaint.subject}</p>
+                            <p><strong>Description:</strong> ${complaint.description}</p>
+                            <p><strong>Date Created:</strong> ${complaint.created_at}</p>
+                            <p><strong>Status:</strong> ${statusBadge}</p>
+                            ${resolvedDetails}
+                            <div class="text-div"></div>
+                        </div>
+                    `;
+
+                    modal.find('#modalContent').html(body);
+                },
+                error: function(xhr, status, error) {
+                    modal.find('#modalContent').html('Failed to fetch complaint. Status: ' + status + ', Error: ' + error);
+                }
             });
         });
+
+        // Use event delegation to handle clicks on dynamically added elements
+        $('#viewModal').on('click', '#resolve-drop', function(){
+            var complaint_Id = $(this).data('id');
+            var html = `<label for="resolve">Resolve Issue:</label>
+                        <textarea class="form-control" id="resolve-approach"></textarea>
+                        <input type="hidden" id="complaint_id" value="${complaint_Id}">
+                        <button class="btn btn-success mt-2" id="submit">Resolve</button>`;
+            $('.text-div').html(html);
+        });
+
+        // Handle form submission via AJAX
+        $('#viewModal').on('click', '#submit', function(){
+            var resolveApproach = $('#resolve-approach').val();
+            var complaintId = $('#complaint_id').val();
+
+            $.ajax({
+                url: '{{ route('complaint.update') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    resolve_approach: resolveApproach,
+                    complaint_id: complaintId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#viewModal').modal('hide');
+                        cuteAlert({
+                            type: "success",
+                            title: "Issue Resolved",
+                            message: response.message,
+                            buttonText: "Ok"
+                        }).then(() => {
+                            window.location.reload();
+                        })
+                    } else {
+                        cuteAlert({
+                            type: "error",
+                            title: "Something went wrong",
+                            message: response.message,
+                            buttonText: "Ok"
+                        }).then(() => {
+                            window.location.reload();
+                        })
+                    }
+                },
+                error: function(xhr, status, error) {
+                    cuteAlert({
+                            type: "success",
+                            title: "Error Occured",
+                            message: error,
+                            buttonText: "Ok"
+                        }).then(() => {
+                            window.location.reload();
+                        })
+                }
+            });
+        });
+    });
     </script>
+
 
 
 </div>

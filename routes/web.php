@@ -104,6 +104,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', [ComplaintController::class, 'create'])->name('complaint.admin.create');
         Route::post('/create', [ComplaintController::class, 'store'])->name('complaint.store');
         Route::get('/{complaint}', [ComplaintController::class, 'show'])->name('complaint.show');
+        Route::post('/complaint/update', [ComplaintController::class, 'update'])->name('complaint.update');
+
     });
 
 
